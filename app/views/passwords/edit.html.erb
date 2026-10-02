@@ -1,9 +1,16 @@
+<main class="auth-page">
 <h1>Update your password</h1>
 
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
+<%= tag.div(flash[:alert], class: "flash flash--alert") if flash[:alert] %>
 
 <%= form_with url: password_path(params[:token]), method: :put do |form| %>
-  <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72 %><br>
-  <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72 %><br>
+  <%= form.label :password, "New password" %>
+  <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72 %>
+  <%= form.label :password_confirmation, "Confirm new password" %>
+  <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72 %>
   <%= form.submit "Save" %>
 <% end %>
+<nav class="auth-links" aria-label="Account help">
+  <%= link_to "Back to sign in", new_session_path %>
+</nav>
+</main>

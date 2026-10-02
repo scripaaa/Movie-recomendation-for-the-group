@@ -1,8 +1,14 @@
+<main class="auth-page">
 <h1>Forgot your password?</h1>
 
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
+<%= tag.div(flash[:alert], class: "flash flash--alert") if flash[:alert] %>
 
 <%= form_with url: passwords_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
+  <%= form.label :email_address, "Email address" %>
+  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %>
   <%= form.submit "Email reset instructions" %>
 <% end %>
+<nav class="auth-links" aria-label="Account help">
+  <%= link_to "Back to sign in", new_session_path %>
+</nav>
+</main>

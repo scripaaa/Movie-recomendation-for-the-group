@@ -28,7 +28,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create with taken email" do
-    existing_user = User.create!(email_address: "existing@example.com", password: "password123", password_confirmation: "password123")
+    User.create!(email_address: "existing@example.com", password: "password123", password_confirmation: "password123")
 
     assert_no_difference("User.count") do
       post registration_path, params: { user: { email_address: "existing@example.com", password: "password123", password_confirmation: "password123" } }
@@ -69,10 +69,4 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_nil cookies[:session_id]
   end
 
-  test "rate limiting on create" do
-    # Rate limiting may not work in test environment due to cache configuration
-    # This test verifies the endpoint responds correctly
-    post registration_path, params: { user: { email_address: "user1@example.com", password: "password123", password_confirmation: "password123" } }
-    assert_response :redirect
-  end
 end

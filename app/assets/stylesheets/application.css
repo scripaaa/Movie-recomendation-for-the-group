@@ -8,3 +8,124 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #172033;
+  background: #f3f5f9;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 48px 20px;
+  background: radial-gradient(ellipse at top, #e7edff 0, #f3f5f9 55%);
+}
+
+.auth-page {
+  max-width: 440px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.auth-page h1 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: clamp(1.8rem, 5vw, 2.3rem);
+  letter-spacing: -0.04em;
+}
+
+.auth-page form {
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  border: 1px solid #e1e6ef;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 14px 40px rgb(28 43 74 / 8%);
+}
+
+label {
+  margin-bottom: -8px;
+  color: #34415a;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #cbd3e0;
+  border-radius: 9px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #526ee8;
+  outline: 3px solid rgb(82 110 232 / 18%);
+}
+
+input[type="submit"] {
+  min-height: 46px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 9px;
+  background: #405dd8;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover { background: #314bc0; }
+
+a { color: #405dd8; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.auth-page form br { display: none; }
+
+.auth-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 14px;
+  margin-top: 18px;
+  text-align: center;
+}
+
+.flash,
+.form-errors {
+  max-width: 440px;
+  margin: 0 auto 14px;
+  padding: 12px 14px;
+  border-radius: 9px;
+}
+
+.flash--alert,
+.form-errors {
+  border: 1px solid #f1b9b9;
+  background: #fff1f1;
+  color: #9e2525;
+}
+
+.flash--notice {
+  border: 1px solid #a9ddc0;
+  background: #effaf3;
+  color: #17633b;
+}
+
+.form-errors h2 { margin: 0 0 8px; font-size: 1rem; }
+.form-errors ul { margin: 0; padding-left: 20px; }
+
+@media (max-width: 520px) {
+  body { padding: 28px 16px; }
+  .auth-page form { padding: 22px; }
+}
