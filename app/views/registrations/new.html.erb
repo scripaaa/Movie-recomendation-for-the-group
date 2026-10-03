@@ -16,8 +16,10 @@
     </div>
   <% end %>
 
+  <%= form.label :nickname, "Nickname" %>
+  <%= form.text_field :nickname, required: true, autofocus: true, autocomplete: "nickname", placeholder: "Choose a unique nickname" %>
   <%= form.label :email_address, "Email address" %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address" %>
+  <%= form.email_field :email_address, required: true, autocomplete: "email", placeholder: "Enter your email address" %>
   <%= form.label :password, "Password" %>
   <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "At least 8 characters", maxlength: 72 %>
   <%= form.label :password_confirmation, "Confirm password" %>
