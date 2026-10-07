@@ -1,0 +1,74 @@
+<main class="dashboard">
+  <header class="dashboard-header">
+    <%= link_to root_path, class: "brand", aria: { label: "MovieRecommender — главная" } do %>
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>MovieRecommender</span>
+    <% end %>
+
+    <nav class="dashboard-nav" aria-label="Главная навигация">
+      <a class="dashboard-nav__link dashboard-nav__link--active" href="#overview">Обзор</a>
+      <a class="dashboard-nav__link" href="#ratings">Мои оценки</a>
+      <a class="dashboard-nav__link" href="#rooms">Комнаты</a>
+    </nav>
+
+    <div class="account-menu">
+      <span class="account-menu__avatar"><%= @user.nickname.first.upcase %></span>
+      <span class="account-menu__name"><%= @user.nickname %></span>
+      <%= button_to "Выйти", session_path, method: :delete, class: "logout-button" %>
+    </div>
+  </header>
+
+  <section class="dashboard-hero" id="overview">
+    <div class="dashboard-hero__content">
+      <p class="eyebrow">ВАШ КИНОПРОФИЛЬ</p>
+      <h1>Привет, <span><%= @user.nickname %></span></h1>
+      <p class="dashboard-hero__description">Ставьте оценки фильмам — так мы поймём, что нравится именно вам, и поможем выбрать кино для компании.</p>
+      <a class="primary-button" href="#ratings">Начать с оценок <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="profile-stats" aria-label="Моя активность">
+    <article class="stat-card">
+      <span class="stat-card__icon stat-card__icon--violet" aria-hidden="true">★</span>
+      <div><p class="stat-card__label">Оценено фильмов</p><p class="stat-card__value">0</p></div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-card__icon stat-card__icon--peach" aria-hidden="true">◎</span>
+      <div><p class="stat-card__label">Моя средняя оценка</p><p class="stat-card__value">—</p></div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-card__icon stat-card__icon--mint" aria-hidden="true">◉</span>
+      <div><p class="stat-card__label">Кинокомнаты</p><p class="stat-card__value">0</p></div>
+    </article>
+  </section>
+
+  <div class="dashboard-sections">
+    <section class="content-card ratings-card" id="ratings">
+      <div class="section-heading">
+        <div><p class="eyebrow">ВАШ ВКУС</p><h2>Мои оценки</h2></div>
+      </div>
+      <div class="empty-state">
+        <span class="empty-state__icon" aria-hidden="true">✧</span>
+        <h3>Ваша киноколлекция начнётся здесь</h3>
+        <p>Оценивайте знакомые фильмы, чтобы рекомендации точнее попадали в настроение.</p>
+        <span class="secondary-button secondary-button--disabled" aria-disabled="true">Подбор фильмов скоро появится</span>
+      </div>
+    </section>
+
+    <section class="content-card rooms-card" id="rooms">
+      <div class="section-heading">
+        <div><p class="eyebrow">СМОТРИТЕ ВМЕСТЕ</p><h2>Мои комнаты</h2></div>
+      </div>
+      <div class="room-preview">
+        <div class="room-preview__icon" aria-hidden="true">✦</div>
+        <div><h3>Выбор фильма всей компанией</h3><p>Создайте комнату, пригласите друзей и найдите фильм, который понравится всем.</p></div>
+      </div>
+      <button class="secondary-button secondary-button--disabled" type="button" disabled>Создание комнат скоро появится</button>
+    </section>
+  </div>
+
+  <footer class="dashboard-footer">
+    <span>MovieRecommender</span>
+    <span>Хорошее кино — ещё лучше вместе</span>
+  </footer>
+</main>
