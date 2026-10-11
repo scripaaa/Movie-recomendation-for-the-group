@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   resource :registration, only: [ :new, :create ]
   resource :profile, only: :show
+  resources :movies, only: [ :index, :show ], param: :tmdb_id, constraints: { tmdb_id: /\d+/ }
   root "profiles#show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

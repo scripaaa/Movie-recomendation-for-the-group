@@ -1,0 +1,43 @@
+<main class="movies-page">
+  <%= link_to "← Назад к фильмам", movies_path, class: "movies-back-link" %>
+
+  <% if @error_message %>
+    <p class="movies-message movies-message--error" role="alert"><%= @error_message %></p>
+  <% else %>
+    <article class="movie-detail">
+      <% if @movie["poster_path"].present? %>
+        <%= image_tag "https://image.tmdb.org/t/p/w500#{@movie['poster_path']}", alt: "Постер фильма «#{@movie['title']}»", class: "movie-detail__poster" %>
+      <% else %>
+        <div class="movie-detail__poster movie-card__poster--empty" aria-label="Постер отсутствует">Постер<br>отсутствует</div>
+      <% end %>
+
+      <div class="movie-detail__content">
+        <p class="eyebrow">ИНФОРМАЦИЯ О ФИЛЬМЕ</p>
+        <h1><%= @movie["title"] %></h1>
+        <% if @movie["original_title"].present? && @movie["original_title"] != @movie["title"] %>
+          <p class="movie-detail__original-title"><%= @movie["original_title"] %></p>
+        <% end %>
+
+        <div class="movie-card__meta movie-detail__meta">
+          <% year = @movie["release_date"].to_s.first(4) %>
+          <% if year.present? %><span><%= year %></span><% end %>
+          <% if @movie["runtime"].present? %><span><%= @movie["runtime"] %> мин.</span><% end %>
+          <% if @movie["vote_average"].to_s.to_f.positive? %><span>★ <%= number_with_precision(@movie["vote_average"], precision: 1) %> / 10 на TMDB</span><% end %>
+        </div>
+
+        <% if @movie["genres"].present? %>
+          <ul class="movie-genres" aria-label="Жанры">
+            <% @movie["genres"].each do |genre| %><li><%= genre["name"] %></li><% end %>
+          </ul>
+        <% end %>
+
+        <section class="movie-overview">
+          <h2>Описание</h2>
+          <p><%= @movie["overview"].presence || "Описание пока недоступно." %></p>
+        </section>
+      </div>
+    </article>
+  <% end %>
+
+  <%= render "tmdb_attribution" %>
+</main>

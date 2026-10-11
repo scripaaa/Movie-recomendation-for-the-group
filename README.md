@@ -1,24 +1,14 @@
-# README
+# Movie Recommender
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Movie search setup
 
-Things you may want to cover:
+Movie search uses the TMDB API from the Rails server. Create an API Read Access Token in your TMDB account settings, then set it in the environment before starting Rails:
 
-* Ruby version
+```powershell
+$env:TMDB_API_READ_ACCESS_TOKEN = "your-token"
+bin/rails server
+```
 
-* System dependencies
+Open `/movies` while signed in to search the catalog. Keep the token out of source code and do not commit it.
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Movie data and posters are provided by TMDB. This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.

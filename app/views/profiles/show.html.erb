@@ -7,6 +7,7 @@
 
     <nav class="dashboard-nav" aria-label="Главная навигация">
       <a class="dashboard-nav__link dashboard-nav__link--active" href="#overview">Обзор</a>
+      <%= link_to "Фильмы", movies_path, class: "dashboard-nav__link" %>
       <a class="dashboard-nav__link" href="#ratings">Мои оценки</a>
       <a class="dashboard-nav__link" href="#rooms">Комнаты</a>
     </nav>
@@ -23,7 +24,9 @@
       <p class="eyebrow">ВАШ КИНОПРОФИЛЬ</p>
       <h1>Привет, <span><%= @user.nickname %></span></h1>
       <p class="dashboard-hero__description">Ставьте оценки фильмам — так мы поймём, что нравится именно вам, и поможем выбрать кино для компании.</p>
-      <a class="primary-button" href="#ratings">Начать с оценок <span aria-hidden="true">→</span></a>
+      <%= link_to movies_path, class: "primary-button" do %>
+        Найти фильм <span aria-hidden="true">→</span>
+      <% end %>
     </div>
   </section>
 

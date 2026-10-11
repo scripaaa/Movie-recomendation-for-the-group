@@ -1,0 +1,57 @@
+<main class="movies-page">
+  <header class="movies-header">
+    <%= link_to "← В личный кабинет", root_path, class: "movies-back-link" %>
+    <p class="eyebrow">КАТАЛОГ ФИЛЬМОВ</p>
+    <h1>Найдём, что посмотреть</h1>
+    <p class="movies-intro">Выберите что-нибудь из популярных фильмов или найдите фильм по названию.</p>
+  </header>
+
+  <%= form_with url: movies_path, method: :get, class: "movie-search" do |form| %>
+    <%= form.label :query, "Название фильма" %>
+    <div class="movie-search__controls">
+      <%= form.search_field :query, value: @query, required: true, autofocus: true, placeholder: "Например, Интерстеллар", autocomplete: "off" %>
+      <%= form.submit "Найти фильмы", class: "primary-button" %>
+    </div>
+  <% end %>
+
+  <% if @error_message %>
+    <p class="movies-message movies-message--error" role="alert"><%= @error_message %></p>
+  <% elsif @movies.empty? %>
+    <p class="movies-message"><%= @query.present? ? "По запросу «#{@query}» ничего не найдено. Попробуйте другое название." : "Популярные фильмы пока не загрузились. Попробуйте позже." %></p>
+  <% elsif @movies.present? %>
+    <div class="movies-section-heading">
+      <h2><%= @section_title %></h2>
+      <% if @query.present? %><p>Запрос: «<%= @query %>»</p><% end %>
+    </div>
+    <section class="movie-grid" aria-label="Результаты поиска фильмов">
+      <% @movies.each do |movie| %>
+        <article class="movie-card">
+          <%= link_to movie_path(movie["id"]), class: "movie-card__link" do %>
+            <% if movie["poster_path"].present? %>
+              <%= image_tag "https://image.tmdb.org/t/p/w342#{movie['poster_path']}", alt: "Постер фильма «#{movie['title']}»", class: "movie-card__poster", loading: "lazy" %>
+            <% else %>
+              <div class="movie-card__poster movie-card__poster--empty" aria-label="Постер отсутствует">Постер<br>отсутствует</div>
+            <% end %>
+            <div class="movie-card__details">
+              <h2><%= movie["title"].presence || movie["original_title"] %></h2>
+              <% year = movie["release_date"].to_s.first(4) %>
+              <div class="movie-card__meta">
+                <% if year.present? %><span><%= year %></span><% end %>
+                <% if movie["vote_average"].to_s.to_f.positive? %><span>★ <%= number_with_precision(movie["vote_average"], precision: 1) %></span><% end %>
+              </div>
+              <p><%= movie["overview"].presence || "Описание пока недоступно." %></p>
+            </div>
+          <% end %>
+        </article>
+      <% end %>
+    </section>
+  <% else %>
+    <section class="movies-empty-state">
+      <span aria-hidden="true">⌕</span>
+      <h2>Введите название фильма</h2>
+      <p>Мы поищем его в каталоге TMDB и покажем подходящие варианты.</p>
+    </section>
+  <% end %>
+
+  <%= render "tmdb_attribution" %>
+</main>
