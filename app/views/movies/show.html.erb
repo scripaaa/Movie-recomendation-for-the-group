@@ -1,43 +1,42 @@
-<main class="movies-page">
-  <%= link_to "← Назад к фильмам", movies_path, class: "movies-back-link" %>
-
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
+  <%= render "shared/header" %>
+  <%= render "shared/flash" %>
+  <%= link_to "← Назад к фильмам", movies_path, class: "mb-6 inline-flex min-h-11 items-center text-sm font-medium text-ink-muted hover:text-brand-ink-hover" %>
   <% if @error_message %>
-    <p class="movies-message movies-message--error" role="alert"><%= @error_message %></p>
+    <p class="rounded-xl border border-rose-800/60 bg-rose-950/40 p-4 text-sm text-rose-200" role="alert"><%= @error_message %></p>
   <% else %>
-    <article class="movie-detail">
+    <article class="grid items-start gap-7 rounded-3xl border border-line bg-surface p-5 shadow-sm sm:p-8 md:grid-cols-[minmax(200px,300px)_minmax(0,1fr)]">
       <% if @movie["poster_path"].present? %>
-        <%= image_tag "https://image.tmdb.org/t/p/w500#{@movie['poster_path']}", alt: "Постер фильма «#{@movie['title']}»", class: "movie-detail__poster" %>
+        <%= image_tag "https://image.tmdb.org/t/p/w500#{@movie['poster_path']}", alt: "Постер фильма «#{@movie['title']}»", class: "mx-auto block aspect-[2/3] w-full max-w-72 rounded-2xl bg-surface-raised object-cover md:max-w-none" %>
       <% else %>
-        <div class="movie-detail__poster movie-card__poster--empty" aria-label="Постер отсутствует">Постер<br>отсутствует</div>
+        <div class="mx-auto grid aspect-[2/3] w-full max-w-72 place-content-center rounded-2xl bg-gradient-to-br from-surface-raised to-brand-soft text-center text-sm text-ink-muted md:max-w-none" aria-label="Постер отсутствует">Постер<br>отсутствует</div>
       <% end %>
-
-      <div class="movie-detail__content">
-        <p class="eyebrow">ИНФОРМАЦИЯ О ФИЛЬМЕ</p>
-        <h1><%= @movie["title"] %></h1>
+      <div class="min-w-0">
+        <p class="mb-3 text-xs font-semibold tracking-widest text-brand-ink">ИНФОРМАЦИЯ О ФИЛЬМЕ</p>
+        <h1 class="break-words text-3xl font-bold tracking-tight sm:text-4xl"><%= @movie["title"] %></h1>
         <% if @movie["original_title"].present? && @movie["original_title"] != @movie["title"] %>
-          <p class="movie-detail__original-title"><%= @movie["original_title"] %></p>
+          <p class="mt-2 text-sm text-ink-muted"><%= @movie["original_title"] %></p>
         <% end %>
-
-        <div class="movie-card__meta movie-detail__meta">
+        <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink-muted">
           <% year = @movie["release_date"].to_s.first(4) %>
           <% if year.present? %><span><%= year %></span><% end %>
           <% if @movie["runtime"].present? %><span><%= @movie["runtime"] %> мин.</span><% end %>
-          <% if @movie["vote_average"].to_s.to_f.positive? %><span>★ <%= number_with_precision(@movie["vote_average"], precision: 1) %> / 10 на TMDB</span><% end %>
+          <% if @movie["vote_average"].to_s.to_f.positive? %>
+            <span class="inline-flex items-center gap-1.5 rounded-lg bg-amber-950/40 px-2.5 py-1 font-medium text-amber-200"><%= ui_icon(:star, classes: "size-4") %> <%= number_with_precision(@movie["vote_average"], precision: 1) %> / 10 на TMDB</span>
+          <% end %>
         </div>
-
         <% if @movie["genres"].present? %>
-          <ul class="movie-genres" aria-label="Жанры">
-            <% @movie["genres"].each do |genre| %><li><%= genre["name"] %></li><% end %>
+          <ul class="mt-5 flex flex-wrap gap-2" aria-label="Жанры">
+            <% @movie["genres"].each do |genre| %><li class="rounded-full bg-brand-soft px-3 py-1.5 text-xs font-medium text-brand-ink"><%= genre["name"] %></li><% end %>
           </ul>
         <% end %>
-
-        <section class="movie-overview">
-          <h2>Описание</h2>
-          <p><%= @movie["overview"].presence || "Описание пока недоступно." %></p>
+        <section class="mt-8 border-t border-line pt-6">
+          <h2 class="text-lg font-semibold">Описание</h2>
+          <p class="mt-3 text-sm leading-7 text-ink-secondary sm:text-base"><%= @movie["overview"].presence || "Описание пока недоступно." %></p>
         </section>
+        <%= render "rating_form" %>
       </div>
     </article>
   <% end %>
-
   <%= render "tmdb_attribution" %>
 </main>

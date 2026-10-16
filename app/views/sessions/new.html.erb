@@ -1,17 +1,25 @@
-<main class="auth-page">
-<h1>Sign in</h1>
-<%= tag.div(flash[:alert], class: "flash flash--alert") if flash[:alert] %>
-<%= tag.div(flash[:notice], class: "flash flash--notice") if flash[:notice] %>
-
-<%= form_with url: session_path do |form| %>
-  <%= form.label :email_address, "Email address" %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %>
-  <%= form.label :password, "Password" %>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %>
-  <%= form.submit "Sign in" %>
-<% end %>
-<nav class="auth-links" aria-label="Account help">
-  <%= link_to "Forgot password?", new_password_path %>
-  <%= link_to "Need an account? Sign up", new_registration_path %>
-</nav>
+<main class="mx-auto max-w-md px-5 py-12 sm:py-20">
+  <div class="mb-8 text-center">
+    <span class="mx-auto mb-5 grid size-12 place-items-center rounded-2xl bg-brand-600 text-xl font-bold text-white shadow-sm" aria-hidden="true">M</span>
+    <h1 class="text-3xl font-bold tracking-tight">С возвращением</h1>
+    <p class="mt-2 text-sm text-ink-muted">Войдите, чтобы продолжить выбирать кино.</p>
+  </div>
+  <%= render "shared/flash" %>
+  <%= form_with url: session_path, class: "space-y-5 rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-8" do |form| %>
+    <div>
+      <%= form.label :email_address, "Электронная почта", class: ui_label_classes %>
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@example.com", value: params[:email_address], class: ui_input_classes %>
+    </div>
+    <div>
+      <div class="flex items-baseline justify-between gap-3">
+        <%= form.label :password, "Пароль", class: ui_label_classes %>
+        <%= link_to "Забыли пароль?", new_password_path, class: "text-xs font-medium text-brand-ink hover:text-brand-ink-hover" %>
+      </div>
+      <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Введите пароль", maxlength: 72, class: ui_input_classes %>
+    </div>
+    <%= form.submit "Войти", class: class_names(ui_button_classes, "w-full cursor-pointer") %>
+  <% end %>
+  <nav class="mt-6 text-center text-sm text-ink-muted" aria-label="Помощь с аккаунтом">
+    Нет аккаунта? <%= link_to "Зарегистрироваться", new_registration_path, class: "font-semibold text-brand-ink hover:text-brand-ink-hover" %>
+  </nav>
 </main>

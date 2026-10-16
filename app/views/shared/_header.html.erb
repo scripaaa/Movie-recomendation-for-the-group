@@ -1,0 +1,18 @@
+<header class="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-line/80 pb-4">
+  <%= link_to root_path, class: "flex items-center gap-2.5 text-sm font-bold tracking-tight text-ink", aria: { label: "MovieRecommender — главная" } do %>
+    <span class="grid size-9 place-items-center rounded-xl bg-brand-600 text-white shadow-sm" aria-hidden="true">M</span>
+    <span>MovieRecommender</span>
+  <% end %>
+  <nav class="order-3 flex w-full flex-wrap gap-1 sm:order-none sm:w-auto" aria-label="Главная навигация">
+    <%= link_to "Обзор", root_path, class: class_names("rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-brand-soft hover:text-brand-ink-hover", current_page?(root_path) ? "bg-brand-soft text-brand-ink" : "text-ink-muted"), aria: { current: current_page?(root_path) ? "page" : nil } %>
+    <%= link_to "Фильмы", movies_path, class: class_names("rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-brand-soft hover:text-brand-ink-hover", controller_name == "movies" ? "bg-brand-soft text-brand-ink" : "text-ink-muted"), aria: { current: current_page?(movies_path) ? "page" : nil } %>
+    <%= link_to "Мои оценки", ratings_path, class: class_names("rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-brand-soft hover:text-brand-ink-hover", controller_name == "ratings" ? "bg-brand-soft text-brand-ink" : "text-ink-muted"), aria: { current: current_page?(ratings_path) ? "page" : nil } %>
+    <%= link_to "Комнаты", rooms_path, class: class_names("rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-brand-soft hover:text-brand-ink-hover", controller_name == "rooms" ? "bg-brand-soft text-brand-ink" : "text-ink-muted"), aria: { current: current_page?(rooms_path) ? "page" : nil } %>
+  </nav>
+  <div class="flex items-center gap-2.5">
+    <%= render "shared/notifications" %>
+    <span class="grid size-9 place-items-center rounded-full bg-brand-soft text-sm font-semibold text-brand-ink" aria-hidden="true"><%= Current.user.nickname.first.upcase %></span>
+    <span class="hidden max-w-32 truncate text-sm font-medium text-ink-secondary lg:inline"><%= Current.user.nickname %></span>
+    <%= button_to "Выйти", session_path, method: :delete, class: ui_button_classes(:secondary) %>
+  </div>
+</header>

@@ -1,2 +1,6 @@
 #!/usr/bin/env ruby.exe
-exec "./bin/rails", "server", *ARGV
+require "rbconfig"
+
+# Use Ruby explicitly so development works in PowerShell as well as Unix shells.
+abort "Tailwind build failed" unless system(RbConfig.ruby, "bin/rails", "tailwindcss:build")
+exec RbConfig.ruby, "bin/rails", "server", *ARGV

@@ -1,0 +1,24 @@
+<section class="mt-8 rounded-2xl border border-brand-line bg-brand-soft/50 p-4 sm:p-5" aria-labelledby="personal-rating-heading">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+    <h2 id="personal-rating-heading" class="text-lg font-semibold">Ваша оценка</h2>
+    <span class="text-xs text-ink-muted">Личный вкус, а не рейтинг TMDB</span>
+  </div>
+  <%= form_with url: "#", method: :get, data: { controller: "rating pending-action", action: "submit->pending-action#submit input->pending-action#clear", pending_action_message_value: "Сохранение оценок пока недоступно.", turbo: false } do |form| %>
+    <fieldset>
+      <legend class="mb-3 text-sm text-ink-secondary">Как вам этот фильм? Выберите от 1 до 10.</legend>
+      <div class="grid grid-cols-4 gap-2 sm:grid-cols-5 xl:grid-cols-10">
+        <% (1..10).each do |score| %>
+          <div class="min-w-0">
+            <%= form.radio_button :score, score, required: true, class: "peer sr-only", data: { action: "change->rating#select" } %>
+            <%= form.label :score, score, value: score, class: "grid min-h-11 cursor-pointer place-items-center rounded-lg border border-line bg-surface text-sm font-semibold text-ink-secondary transition hover:border-brand-300 hover:bg-brand-soft peer-checked:border-brand-600 peer-checked:bg-brand-600 peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand-300" %>
+          </div>
+        <% end %>
+      </div>
+    </fieldset>
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <p class="text-sm font-medium text-ink-secondary" aria-live="polite" data-rating-target="value">Оценка не выбрана</p>
+      <%= form.button "Сохранить оценку", type: :submit, disabled: true, class: class_names(ui_button_classes, "cursor-pointer"), data: { pending_action_target: "submit" } %>
+    </div>
+    <p hidden class="mt-4 rounded-xl border border-amber-800/60 bg-amber-950/40 px-4 py-3 text-sm text-amber-200" role="status" data-pending-action-target="status"></p>
+  <% end %>
+</section>

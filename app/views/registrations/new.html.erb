@@ -1,33 +1,38 @@
-<main class="auth-page">
-<h1>Sign up</h1>
-
-<%= tag.div(flash[:alert], class: "flash flash--alert") if flash[:alert] %>
-<%= tag.div(flash[:notice], class: "flash flash--notice") if flash[:notice] %>
-
-<%= form_with model: @user, url: registration_path do |form| %>
-  <% if @user.errors.any? %>
-    <div class="form-errors" role="alert">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
-      <ul>
-        <% @user.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<main class="mx-auto max-w-md px-5 py-12 sm:py-16">
+  <div class="mb-8 text-center">
+    <span class="mx-auto mb-5 grid size-12 place-items-center rounded-2xl bg-brand-600 text-xl font-bold text-white shadow-sm" aria-hidden="true">M</span>
+    <h1 class="text-3xl font-bold tracking-tight">Ваш вкус. Ваше кино.</h1>
+    <p class="mt-2 text-sm text-ink-muted">Создайте аккаунт и начните свою киноколлекцию.</p>
+  </div>
+  <%= render "shared/flash" %>
+  <%= form_with model: @user, url: registration_path, class: "space-y-5 rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-8" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="rounded-xl border border-rose-800/60 bg-rose-950/40 p-4 text-sm text-rose-200" role="alert">
+        <h2 class="font-semibold">Проверьте данные</h2>
+        <ul class="mt-2 list-disc space-y-1 pl-5">
+          <% @user.errors.each do |error| %><li><%= error.full_message %></li><% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div>
+      <%= form.label :nickname, "Никнейм", class: ui_label_classes %>
+      <%= form.text_field :nickname, required: true, autofocus: true, autocomplete: "nickname", placeholder: "Как вас называть?", class: ui_input_classes, aria: { invalid: @user.errors[:nickname].any? } %>
     </div>
+    <div>
+      <%= form.label :email_address, "Электронная почта", class: ui_label_classes %>
+      <%= form.email_field :email_address, required: true, autocomplete: "email", placeholder: "you@example.com", class: ui_input_classes, aria: { invalid: @user.errors[:email_address].any? } %>
+    </div>
+    <div>
+      <%= form.label :password, "Пароль", class: ui_label_classes %>
+      <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Не менее 8 символов", maxlength: 72, class: ui_input_classes, aria: { invalid: @user.errors[:password].any? } %>
+    </div>
+    <div>
+      <%= form.label :password_confirmation, "Повторите пароль", class: ui_label_classes %>
+      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Ещё раз тот же пароль", maxlength: 72, class: ui_input_classes, aria: { invalid: @user.errors[:password_confirmation].any? } %>
+    </div>
+    <%= form.submit "Создать аккаунт", class: class_names(ui_button_classes, "w-full cursor-pointer") %>
   <% end %>
-
-  <%= form.label :nickname, "Nickname" %>
-  <%= form.text_field :nickname, required: true, autofocus: true, autocomplete: "nickname", placeholder: "Choose a unique nickname" %>
-  <%= form.label :email_address, "Email address" %>
-  <%= form.email_field :email_address, required: true, autocomplete: "email", placeholder: "Enter your email address" %>
-  <%= form.label :password, "Password" %>
-  <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "At least 8 characters", maxlength: 72 %>
-  <%= form.label :password_confirmation, "Confirm password" %>
-  <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat your password", maxlength: 72 %>
-  <%= form.submit "Sign up" %>
-<% end %>
-
-<nav class="auth-links" aria-label="Account help">
-  <%= link_to "Already have an account? Sign in", new_session_path %>
-</nav>
+  <nav class="mt-6 text-center text-sm text-ink-muted" aria-label="Помощь с аккаунтом">
+    Уже есть аккаунт? <%= link_to "Войти", new_session_path, class: "font-semibold text-brand-ink hover:text-brand-ink-hover" %>
+  </nav>
 </main>

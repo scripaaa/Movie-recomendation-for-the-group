@@ -1,0 +1,18 @@
+<% content_for :title, "Подбор фильма в комнате — MovieRecommender" %>
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
+  <%= render "shared/header" %>
+  <%= link_to "← Вернуться в комнату", @room_path, class: "mb-6 inline-flex min-h-11 items-center text-sm font-medium text-ink-muted hover:text-brand-ink-hover" %>
+  <header class="mb-6">
+    <p class="mb-3 text-xs font-semibold tracking-widest text-brand-ink">ВЫБИРАЕМ ВМЕСТЕ</p>
+    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Подбор фильма</h1>
+    <p class="mt-3 text-sm leading-6 text-ink-muted">Найдём кино для вашей компании.</p>
+  </header>
+  <section class="flex min-h-64 flex-col items-center justify-center rounded-3xl border border-line bg-surface px-6 py-8 text-center sm:p-10" aria-labelledby="room-survey-heading">
+    <span class="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink"><%= ui_icon(:sparkles, classes: "size-6") %></span>
+    <h2 id="room-survey-heading" class="mt-4 text-xl font-semibold tracking-tight">Что посмотрим вместе?</h2>
+    <p class="mt-2 max-w-md text-sm leading-6 text-ink-muted">Здесь появится опрос о пожеланиях участников комнаты.</p>
+    <%= link_to @room_path, class: class_names(ui_button_classes(:secondary), "mt-6") do %>
+      <%= ui_icon(:close) %> Выйти из подбора
+    <% end %>
+  </section>
+</main>

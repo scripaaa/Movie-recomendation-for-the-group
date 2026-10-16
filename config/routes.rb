@@ -4,6 +4,13 @@ Rails.application.routes.draw do
   resource :registration, only: [ :new, :create ]
   resource :profile, only: :show
   resources :movies, only: [ :index, :show ], param: :tmdb_id, constraints: { tmdb_id: /\d+/ }
+  resources :rooms, only: [ :index, :new, :show ] do
+    get :selection, on: :member
+  end
+  get "room", to: "rooms#show", as: :current_room
+  get "room/selection", to: "rooms#selection", as: :current_room_selection
+  resources :ratings, only: :index
+  resource :recommendations, only: :show
   root "profiles#show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

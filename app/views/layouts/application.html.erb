@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
   <head>
     <title><%= content_for(:title) || "Movie Recommender" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#0b1120">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Movie Recommender">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,7 +25,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="min-h-screen bg-canvas font-sans text-ink antialiased selection:bg-brand-soft selection:text-brand-ink-hover">
     <%= yield %>
   </body>
 </html>

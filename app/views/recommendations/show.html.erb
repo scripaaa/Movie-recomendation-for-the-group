@@ -1,0 +1,22 @@
+<% content_for :title, "Подбор фильмов — MovieRecommender" %>
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
+  <%= render "shared/header" %>
+  <header class="mb-8">
+    <p class="mb-3 text-xs font-semibold tracking-widest text-brand-ink">КИНО ПО ВАШЕМУ ВКУСУ</p>
+    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Что посмотреть сегодня?</h1>
+    <p class="mt-3 max-w-2xl text-sm leading-6 text-ink-muted">Выберите жанр и время, которое готовы провести за фильмом. Ваши оценки помогут сделать подбор точнее.</p>
+  </header>
+  <section class="rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8" aria-labelledby="selection-heading">
+    <h2 id="selection-heading" class="mb-5 text-xl font-semibold tracking-tight">Пожелания на вечер</h2>
+    <%= render "shared/recommendation_form" %>
+  </section>
+  <section class="mt-6 rounded-3xl border border-line bg-surface p-6 sm:p-8" aria-labelledby="recommendations-heading">
+    <h2 id="recommendations-heading" class="text-xl font-semibold tracking-tight">Подходит вам</h2>
+    <div class="flex min-h-44 flex-col items-center justify-center py-6 text-center">
+      <span class="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink"><%= ui_icon(:sparkles, classes: "size-6") %></span>
+      <h3 class="mt-4 font-semibold">Следующий любимый фильм — впереди</h3>
+      <p class="mt-2 max-w-md text-sm leading-6 text-ink-muted">Здесь появится ваша подборка. А пока можно найти знакомые фильмы и оценить их.</p>
+      <%= link_to "Перейти к фильмам", movies_path, class: class_names(ui_button_classes(:secondary), "mt-5") %>
+    </div>
+  </section>
+</main>

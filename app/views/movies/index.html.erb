@@ -1,57 +1,36 @@
-<main class="movies-page">
-  <header class="movies-header">
-    <%= link_to "← В личный кабинет", root_path, class: "movies-back-link" %>
-    <p class="eyebrow">КАТАЛОГ ФИЛЬМОВ</p>
-    <h1>Найдём, что посмотреть</h1>
-    <p class="movies-intro">Выберите что-нибудь из популярных фильмов или найдите фильм по названию.</p>
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
+  <%= render "shared/header" %>
+  <%= render "shared/flash" %>
+  <header class="mb-7">
+    <p class="mb-3 text-xs font-semibold tracking-widest text-brand-ink">КАТАЛОГ ФИЛЬМОВ</p>
+    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Найдём, что посмотреть</h1>
+    <p class="mt-3 text-sm leading-6 text-ink-muted">Выберите что-нибудь из популярных фильмов или найдите фильм по названию.</p>
   </header>
-
-  <%= form_with url: movies_path, method: :get, class: "movie-search" do |form| %>
-    <%= form.label :query, "Название фильма" %>
-    <div class="movie-search__controls">
-      <%= form.search_field :query, value: @query, required: true, autofocus: true, placeholder: "Например, Интерстеллар", autocomplete: "off" %>
-      <%= form.submit "Найти фильмы", class: "primary-button" %>
+  <%= form_with url: movies_path, method: :get, class: "rounded-2xl border border-line bg-surface p-5 shadow-sm" do |form| %>
+    <%= form.label :query, "Название фильма", class: ui_label_classes %>
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <%= form.search_field :query, value: @query, required: true, autofocus: true, placeholder: "Например, Интерстеллар", autocomplete: "off", class: class_names(ui_input_classes, "min-w-0 sm:flex-1") %>
+      <%= form.submit "Найти фильмы", class: class_names(ui_button_classes, "shrink-0 cursor-pointer") %>
     </div>
   <% end %>
-
   <% if @error_message %>
-    <p class="movies-message movies-message--error" role="alert"><%= @error_message %></p>
-  <% elsif @movies.empty? %>
-    <p class="movies-message"><%= @query.present? ? "По запросу «#{@query}» ничего не найдено. Попробуйте другое название." : "Популярные фильмы пока не загрузились. Попробуйте позже." %></p>
-  <% elsif @movies.present? %>
-    <div class="movies-section-heading">
-      <h2><%= @section_title %></h2>
-      <% if @query.present? %><p>Запрос: «<%= @query %>»</p><% end %>
-    </div>
-    <section class="movie-grid" aria-label="Результаты поиска фильмов">
-      <% @movies.each do |movie| %>
-        <article class="movie-card">
-          <%= link_to movie_path(movie["id"]), class: "movie-card__link" do %>
-            <% if movie["poster_path"].present? %>
-              <%= image_tag "https://image.tmdb.org/t/p/w342#{movie['poster_path']}", alt: "Постер фильма «#{movie['title']}»", class: "movie-card__poster", loading: "lazy" %>
-            <% else %>
-              <div class="movie-card__poster movie-card__poster--empty" aria-label="Постер отсутствует">Постер<br>отсутствует</div>
-            <% end %>
-            <div class="movie-card__details">
-              <h2><%= movie["title"].presence || movie["original_title"] %></h2>
-              <% year = movie["release_date"].to_s.first(4) %>
-              <div class="movie-card__meta">
-                <% if year.present? %><span><%= year %></span><% end %>
-                <% if movie["vote_average"].to_s.to_f.positive? %><span>★ <%= number_with_precision(movie["vote_average"], precision: 1) %></span><% end %>
-              </div>
-              <p><%= movie["overview"].presence || "Описание пока недоступно." %></p>
-            </div>
-          <% end %>
-        </article>
-      <% end %>
+    <p class="mt-6 rounded-xl border border-rose-800/60 bg-rose-950/40 p-4 text-sm text-rose-200" role="alert"><%= @error_message %></p>
+  <% elsif @movies.blank? %>
+    <section class="mt-6 rounded-2xl border border-dashed border-line-strong bg-surface px-5 py-12 text-center">
+      <%= ui_icon(:search, classes: "mx-auto size-8 text-brand-ink") %>
+      <h2 class="mt-3 text-lg font-semibold"><%= @query.present? ? "Ничего не найдено" : "Фильмы пока не загрузились" %></h2>
+      <p class="mt-2 text-sm text-ink-muted"><%= @query.present? ? "По запросу «#{@query}» нет результатов. Попробуйте другое название." : "Попробуйте открыть каталог чуть позже." %></p>
     </section>
   <% else %>
-    <section class="movies-empty-state">
-      <span aria-hidden="true">⌕</span>
-      <h2>Введите название фильма</h2>
-      <p>Мы поищем его в каталоге TMDB и покажем подходящие варианты.</p>
+    <div class="mb-4 mt-8">
+      <h2 class="text-xl font-semibold tracking-tight"><%= @section_title %></h2>
+      <% if @query.present? %><p class="mt-1 text-sm text-ink-muted">Запрос: «<%= @query %>»</p><% end %>
+    </div>
+    <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4" aria-label="Результаты поиска фильмов">
+      <% @movies.each do |movie| %>
+        <%= render "movie_card", movie: movie %>
+      <% end %>
     </section>
   <% end %>
-
   <%= render "tmdb_attribution" %>
 </main>

@@ -1,0 +1,46 @@
+<% content_for :title, "Кинокомната — MovieRecommender" %>
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
+  <%= render "shared/header" %>
+  <%= link_to "← Мои комнаты", rooms_path, class: "mb-6 inline-flex min-h-11 items-center text-sm font-medium text-ink-muted hover:text-brand-ink-hover" %>
+  <header class="mb-7 flex flex-wrap items-end justify-between gap-5">
+    <div>
+      <p class="mb-3 text-xs font-semibold tracking-widest text-brand-ink">ХОРОШЕЕ КИНО — ЛУЧШЕ ВМЕСТЕ</p>
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Кинокомната</h1>
+      <p class="mt-3 text-sm leading-6 text-ink-muted">Соберите друзей и найдите фильм для всей компании.</p>
+    </div>
+    <%= render "invitation" %>
+  </header>
+  <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div class="min-w-0 space-y-6">
+      <section class="rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8" aria-labelledby="room-selection-heading">
+        <p class="mb-2 text-xs font-semibold tracking-widest text-brand-ink">ВАШ ОБЩИЙ КИНОВЕЧЕР</p>
+        <h2 id="room-selection-heading" class="text-2xl font-semibold tracking-tight">Что посмотрим?</h2>
+        <p class="mb-6 mt-3 text-sm leading-6 text-ink-muted">Задайте пожелания на вечер. Подбор будет учитывать оценки участников комнаты.</p>
+        <%= render "shared/recommendation_form", destination: @selection_path %>
+      </section>
+      <section class="rounded-3xl border border-line bg-surface p-6 sm:p-8" aria-labelledby="room-results-heading">
+        <h2 id="room-results-heading" class="text-xl font-semibold tracking-tight">Фильмы для компании</h2>
+        <div class="flex min-h-40 flex-col items-center justify-center py-6 text-center">
+          <span class="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink"><%= ui_icon(:film, classes: "size-6") %></span>
+          <h3 class="mt-4 font-semibold">Впереди — совместный выбор</h3>
+          <p class="mt-2 max-w-sm text-sm leading-6 text-ink-muted">Здесь появятся фильмы, подходящие вашей компании. Начните с приглашения участников.</p>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-5">
+      <section class="rounded-2xl border border-line bg-surface p-5" aria-labelledby="participants-heading">
+        <h2 id="participants-heading" class="text-lg font-semibold">Участники</h2>
+        <div class="py-7 text-center">
+          <span class="mx-auto grid size-11 place-items-center rounded-full bg-surface-raised text-ink-muted"><%= ui_icon(:users) %></span>
+          <p class="mt-3 text-sm font-medium text-ink-secondary">Пока никого нет</p>
+          <p class="mt-2 text-xs leading-5 text-ink-muted">Пригласите друзей, чтобы выбирать кино вместе.</p>
+        </div>
+      </section>
+      <section class="rounded-2xl border border-brand-line bg-brand-soft p-5">
+        <h2 class="text-sm font-semibold text-brand-ink-hover">Больше оценок — точнее подбор</h2>
+        <p class="mt-2 text-sm leading-6 text-brand-ink">Оцените знакомые фильмы, чтобы выбор учитывал ваши предпочтения.</p>
+        <%= link_to "Найти фильм →", movies_path, class: "mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-brand-ink hover:text-brand-ink-hover" %>
+      </section>
+    </aside>
+  </div>
+</main>

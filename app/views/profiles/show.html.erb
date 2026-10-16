@@ -1,77 +1,69 @@
-<main class="dashboard">
-  <header class="dashboard-header">
-    <%= link_to root_path, class: "brand", aria: { label: "MovieRecommender — главная" } do %>
-      <span class="brand-mark" aria-hidden="true">M</span>
-      <span>MovieRecommender</span>
-    <% end %>
-
-    <nav class="dashboard-nav" aria-label="Главная навигация">
-      <a class="dashboard-nav__link dashboard-nav__link--active" href="#overview">Обзор</a>
-      <%= link_to "Фильмы", movies_path, class: "dashboard-nav__link" %>
-      <a class="dashboard-nav__link" href="#ratings">Мои оценки</a>
-      <a class="dashboard-nav__link" href="#rooms">Комнаты</a>
-    </nav>
-
-    <div class="account-menu">
-      <span class="account-menu__avatar"><%= @user.nickname.first.upcase %></span>
-      <span class="account-menu__name"><%= @user.nickname %></span>
-      <%= button_to "Выйти", session_path, method: :delete, class: "logout-button" %>
-    </div>
-  </header>
-
-  <section class="dashboard-hero" id="overview">
-    <div class="dashboard-hero__content">
-      <p class="eyebrow">ВАШ КИНОПРОФИЛЬ</p>
-      <h1>Привет, <span><%= @user.nickname %></span></h1>
-      <p class="dashboard-hero__description">Ставьте оценки фильмам — так мы поймём, что нравится именно вам, и поможем выбрать кино для компании.</p>
-      <%= link_to movies_path, class: "primary-button" do %>
-        Найти фильм <span aria-hidden="true">→</span>
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8">
+  <%= render "shared/header" %>
+  <%= render "shared/flash" %>
+  <section class="rounded-3xl border border-brand-line bg-gradient-to-br from-surface via-brand-soft to-hero-end p-5 sm:p-6" id="overview">
+    <p class="mb-2 text-xs font-semibold tracking-widest text-brand-ink">ВАШ КИНОВЕЧЕР</p>
+    <h1 class="text-3xl font-bold tracking-tight">Что посмотрим сегодня?</h1>
+    <p class="mt-2 max-w-2xl text-sm leading-6 text-ink-secondary">Создайте комнату и выберите фильм вместе. Оценки помогут учесть вкусы каждого.</p>
+    <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+      <%= link_to new_room_path, class: ui_button_classes do %>
+        <%= ui_icon(:plus) %> Создать комнату
+      <% end %>
+      <%= link_to movies_path, class: ui_button_classes(:secondary) do %>
+        <%= ui_icon(:search) %> Найти фильм
       <% end %>
     </div>
   </section>
-
-  <section class="profile-stats" aria-label="Моя активность">
-    <article class="stat-card">
-      <span class="stat-card__icon stat-card__icon--violet" aria-hidden="true">★</span>
-      <div><p class="stat-card__label">Оценено фильмов</p><p class="stat-card__value">0</p></div>
+  <section class="my-4 grid grid-cols-3 gap-3" aria-label="Моя активность">
+    <article class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 sm:p-4">
+      <span class="hidden size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink sm:grid"><%= ui_icon(:star) %></span>
+      <div class="min-w-0"><p class="text-xl font-semibold tabular-nums">0</p><p class="mt-1 text-xs leading-5 text-ink-muted">Оценено фильмов</p></div>
     </article>
-    <article class="stat-card">
-      <span class="stat-card__icon stat-card__icon--peach" aria-hidden="true">◎</span>
-      <div><p class="stat-card__label">Моя средняя оценка</p><p class="stat-card__value">—</p></div>
+    <article class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 sm:p-4">
+      <span class="hidden size-10 shrink-0 place-items-center rounded-xl bg-amber-950/40 text-amber-300 sm:grid"><%= ui_icon(:chart) %></span>
+      <div class="min-w-0"><p class="text-xl font-semibold">—</p><p class="mt-1 text-xs leading-5 text-ink-muted">Средняя оценка</p></div>
     </article>
-    <article class="stat-card">
-      <span class="stat-card__icon stat-card__icon--mint" aria-hidden="true">◉</span>
-      <div><p class="stat-card__label">Кинокомнаты</p><p class="stat-card__value">0</p></div>
+    <article class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 sm:p-4">
+      <span class="hidden size-10 shrink-0 place-items-center rounded-xl bg-emerald-950/40 text-emerald-300 sm:grid"><%= ui_icon(:users) %></span>
+      <div class="min-w-0"><p class="text-xl font-semibold tabular-nums">0</p><p class="mt-1 text-xs leading-5 text-ink-muted">Комнат</p></div>
     </article>
   </section>
-
-  <div class="dashboard-sections">
-    <section class="content-card ratings-card" id="ratings">
-      <div class="section-heading">
-        <div><p class="eyebrow">ВАШ ВКУС</p><h2>Мои оценки</h2></div>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <section class="flex flex-col rounded-2xl border border-line bg-surface p-5" id="ratings">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-lg font-semibold tracking-tight">Мои оценки</h2>
+        <%= link_to "Все оценки →", ratings_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-brand-ink hover:text-brand-ink-hover" %>
       </div>
-      <div class="empty-state">
-        <span class="empty-state__icon" aria-hidden="true">✧</span>
-        <h3>Ваша киноколлекция начнётся здесь</h3>
-        <p>Оценивайте знакомые фильмы, чтобы рекомендации точнее попадали в настроение.</p>
-        <span class="secondary-button secondary-button--disabled" aria-disabled="true">Подбор фильмов скоро появится</span>
+      <div class="mb-4 mt-3 flex items-start gap-3">
+        <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink"><%= ui_icon(:film) %></span>
+        <div>
+          <h3 class="text-sm font-semibold">Здесь будет ваша киноколлекция</h3>
+          <p class="mt-1 text-sm leading-6 text-ink-muted">Оцените знакомые фильмы — рекомендации станут точнее.</p>
+        </div>
+      </div>
+      <div class="mt-auto flex flex-wrap items-center gap-3">
+        <%= link_to "Оценить фильм", movies_path, class: ui_button_classes(:secondary) %>
+        <%= link_to "Подобрать фильмы", recommendations_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-brand-ink hover:text-brand-ink-hover" %>
       </div>
     </section>
-
-    <section class="content-card rooms-card" id="rooms">
-      <div class="section-heading">
-        <div><p class="eyebrow">СМОТРИТЕ ВМЕСТЕ</p><h2>Мои комнаты</h2></div>
+    <section class="flex flex-col rounded-2xl border border-line bg-surface p-5" id="rooms">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-lg font-semibold tracking-tight">Мои комнаты</h2>
+        <%= link_to "Все комнаты →", rooms_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-brand-ink hover:text-brand-ink-hover" %>
       </div>
-      <div class="room-preview">
-        <div class="room-preview__icon" aria-hidden="true">✦</div>
-        <div><h3>Выбор фильма всей компанией</h3><p>Создайте комнату, пригласите друзей и найдите фильм, который понравится всем.</p></div>
+      <div class="mb-4 mt-3 flex items-start gap-3">
+        <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink"><%= ui_icon(:users) %></span>
+        <div>
+          <h3 class="text-sm font-semibold">Выбор фильма всей компанией</h3>
+          <p class="mt-1 text-sm leading-6 text-ink-muted">Пригласите друзей и найдите фильм для всей компании.</p>
+        </div>
       </div>
-      <button class="secondary-button secondary-button--disabled" type="button" disabled>Создание комнат скоро появится</button>
+      <div class="mt-auto">
+        <%= link_to "Перейти в комнату", current_room_path, class: ui_button_classes(:secondary) %>
+      </div>
     </section>
   </div>
-
-  <footer class="dashboard-footer">
-    <span>MovieRecommender</span>
-    <span>Хорошее кино — ещё лучше вместе</span>
+  <footer class="mt-5 flex flex-wrap justify-between gap-2 text-xs text-ink-muted">
+    <span>MovieRecommender</span><span>Хорошее кино — ещё лучше вместе</span>
   </footer>
 </main>

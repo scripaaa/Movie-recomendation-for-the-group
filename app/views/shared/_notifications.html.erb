@@ -1,0 +1,15 @@
+<div class="relative" data-controller="notifications" data-action="click@document->notifications#dismissOutside focusin@document->notifications#dismissOutside keydown.esc@document->notifications#dismissWithEscape resize@window->notifications#position turbo:before-cache@document->notifications#close">
+  <button type="button" class="grid size-11 cursor-pointer place-items-center rounded-xl border border-line bg-surface text-ink-secondary transition hover:bg-surface-hover hover:text-brand-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-300 aria-expanded:border-brand-300 aria-expanded:bg-brand-soft aria-expanded:text-brand-ink" aria-label="Уведомления" aria-haspopup="dialog" aria-expanded="false" aria-controls="notifications-panel" data-notifications-target="trigger" data-action="notifications#toggle">
+    <%= ui_icon(:bell) %>
+  </button>
+  <section id="notifications-panel" hidden role="dialog" aria-modal="false" aria-labelledby="notifications-heading" tabindex="-1" class="absolute top-full z-50 mt-3 w-[min(24rem,calc(100vw_-_2rem))] overflow-hidden rounded-2xl border border-line bg-surface text-ink shadow-xl shadow-black/30 focus:outline-none" data-notifications-target="panel">
+    <div class="flex items-center justify-between gap-3 border-b border-line px-5 py-3">
+      <h2 id="notifications-heading" class="text-base font-semibold">Уведомления</h2>
+      <button type="button" class="grid size-11 shrink-0 cursor-pointer place-items-center rounded-xl text-ink-muted hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-brand-300" aria-label="Закрыть уведомления" data-action="notifications#dismiss"><%= ui_icon(:close) %></button>
+    </div>
+    <div class="max-h-[min(24rem,60dvh)] overflow-y-auto px-5 py-8 text-center">
+      <p class="text-sm font-semibold text-ink">Пока нет приглашений</p>
+      <p class="mt-2 text-sm leading-6 text-ink-muted">Здесь появятся приглашения в комнаты. Вы сможете принять или отклонить приглашение.</p>
+    </div>
+  </section>
+</div>
