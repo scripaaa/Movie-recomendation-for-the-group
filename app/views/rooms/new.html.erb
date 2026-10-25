@@ -1,6 +1,7 @@
 <% content_for :title, "Создать комнату — MovieRecommender" %>
 <main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
   <%= render "shared/header" %>
+  <%= render "shared/flash" %>
   <%= link_to "← Мои комнаты", rooms_path, class: "mb-6 inline-flex min-h-11 items-center text-sm font-medium text-ink-muted hover:text-brand-ink-hover" %>
   <div class="mx-auto max-w-2xl">
     <header class="mb-7">
@@ -8,16 +9,14 @@
       <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Создать комнату</h1>
       <p class="mt-3 text-sm leading-6 text-ink-muted">Дайте вашей компании место для совместного выбора кино.</p>
     </header>
-    <%= form_with url: "#", method: :get, class: "space-y-6 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8", data: { controller: "pending-action", action: "submit->pending-action#submit input->pending-action#clear", pending_action_message_value: "Создание комнат пока недоступно.", turbo: false } do |form| %>
+    <%= form_with model: @room, class: "space-y-6 rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8" do |form| %>
+      <% if @room.errors.any? %>
+        <p role="alert" class="rounded-xl border border-rose-800/60 bg-rose-950/40 p-4 text-sm text-rose-200">Введите название комнаты от 1 до 80 символов.</p>
+      <% end %>
       <div>
         <%= form.label :name, "Название комнаты", class: ui_label_classes %>
         <%= form.text_field :name, required: true, maxlength: 80, placeholder: "Например, Кино по пятницам", class: ui_input_classes, aria: { describedby: "room-name-help" } %>
         <p id="room-name-help" class="mt-2 text-xs text-ink-muted">Название, которое узнают ваши друзья. До 80 символов.</p>
-      </div>
-      <div>
-        <%= form.label :description, "Описание", class: ui_label_classes %>
-        <%= form.text_area :description, rows: 4, maxlength: 300, placeholder: "Что вы любите смотреть вместе?", class: class_names(ui_input_classes, "resize-y"), aria: { describedby: "room-description-help" } %>
-        <p id="room-description-help" class="mt-2 text-xs text-ink-muted">Необязательно. До 300 символов.</p>
       </div>
       <div class="rounded-2xl bg-brand-soft p-4">
         <h2 class="text-sm font-semibold text-brand-ink-hover">Дальше — приглашение друзей</h2>
@@ -25,10 +24,8 @@
       </div>
       <div class="flex flex-col-reverse gap-3 border-t border-line pt-5 sm:flex-row sm:justify-end">
         <%= link_to "Отмена", rooms_path, class: ui_button_classes(:secondary) %>
-        <%= form.button "Создать комнату", type: :submit, disabled: true, class: class_names(ui_button_classes, "cursor-pointer"), data: { pending_action_target: "submit" } %>
+        <%= form.button "Создать комнату", type: :submit, class: class_names(ui_button_classes, "cursor-pointer"), data: { turbo_submits_with: "Создаём комнату…" } %>
       </div>
-      <p hidden class="rounded-xl border border-amber-800/60 bg-amber-950/40 px-4 py-3 text-sm leading-6 text-amber-200" role="status" data-pending-action-target="status"></p>
     <% end %>
-    <%= link_to "Перейти на страницу комнаты →", current_room_path, class: "mt-5 inline-flex min-h-11 items-center text-sm font-medium text-brand-ink hover:text-brand-ink-hover" %>
   </div>
 </main>

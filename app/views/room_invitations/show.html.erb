@@ -1,0 +1,14 @@
+<% content_for :title, "Приглашение в комнату — MovieRecommender" %>
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
+  <%= render "shared/header" %>
+  <%= render "shared/flash" %>
+  <section class="mx-auto max-w-xl rounded-3xl border border-line bg-surface p-6 sm:p-8">
+    <p class="mb-3 text-xs font-semibold tracking-widest text-brand-ink">ВАС ПРИГЛАСИЛИ</p>
+    <h1 class="break-words text-3xl font-bold tracking-tight"><%= @room.name %></h1>
+    <p class="mt-4 text-sm leading-6 text-ink-muted">Создатель комнаты — <%= @room.owner.nickname %>. Вступите, чтобы выбирать кино вместе. Подбор будет учитывать и ваши оценки.</p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <%= button_to "Вступить в комнату", room_invitation_path(params[:token]), class: class_names(ui_button_classes, "cursor-pointer") %>
+      <%= link_to "Мои комнаты", rooms_path, class: ui_button_classes(:secondary) %>
+    </div>
+  </section>
+</main>

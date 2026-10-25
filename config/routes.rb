@@ -4,11 +4,19 @@ Rails.application.routes.draw do
   resource :registration, only: [ :new, :create ]
   resource :profile, only: :show
   resources :movies, only: [ :index, :show ], param: :tmdb_id, constraints: { tmdb_id: /\d+/ }
-  resources :rooms, only: [ :index, :new, :show ] do
+  put "movies/:tmdb_id/rating", to: "ratings#update", as: :movie_rating, constraints: { tmdb_id: /\d+/ }
+  resources :rooms, only: [ :index, :new, :create, :show ] do
     get :selection, on: :member
+    post :selection, on: :member, action: :create_selection
+    resources :quizzes, only: [ :create, :show ], controller: "room_quizzes" do
+      post :vote, on: :member
+      post :finish, on: :member
+    end
   end
-  get "room", to: "rooms#show", as: :current_room
-  get "room/selection", to: "rooms#selection", as: :current_room_selection
+  get "invitations/:token", to: "room_invitations#show", as: :room_invitation
+  post "invitations/:token", to: "room_invitations#create"
+  get "room", to: "rooms#current", as: :current_room
+  get "room/selection", to: "rooms#current_selection", as: :current_room_selection
   resources :ratings, only: :index
   resource :recommendations, only: :show
   root "profiles#show"

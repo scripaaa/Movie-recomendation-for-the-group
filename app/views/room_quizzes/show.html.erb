@@ -1,0 +1,97 @@
+<% content_for :title, "Квиз — #{@room.name}" %>
+<main class="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10" data-controller="quiz" data-quiz-url-value="<%= room_quiz_path(@room, @quiz, format: :json) %>" data-quiz-version-value="<%= @quiz.updated_at.utc.iso8601(6) %>" data-quiz-live-value="<%= @quiz.active? || @quiz.exhausted? %>" data-action="submit->quiz#pause turbo:submit-end->quiz#resume">
+  <%= render "shared/header" %>
+  <%= render "shared/flash" %>
+  <%= link_to "← Вернуться в комнату", room_path(@room), class: "mb-6 inline-flex min-h-11 items-center text-sm font-medium text-ink-muted hover:text-brand-ink-hover" %>
+  <header class="mb-6">
+    <p class="mb-3 text-xs font-semibold tracking-widest text-brand-ink">КВИЗ · <%= @room.name %></p>
+    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl"><%= @quiz.selected? ? "Фильм выбран!" : @quiz.active? ? "Выбираем фильм вместе" : "Квиз завершён" %></h1>
+    <p class="mt-3 text-sm leading-6 text-ink-muted">«Нет» снижает приоритет жанров только в этой комнате. «Не знаю» не меняет предпочтения. Фильм выбирается, когда все ответили «Да».</p>
+  </header>
+
+  <% if @quiz.selected? %>
+    <% movie = @quiz.selected_candidate.fetch("movie") %>
+    <% yes_count = @quiz.votes.where(tmdb_id: @quiz.selected_movie_id, choice: "yes").count %>
+    <section class="rounded-3xl border border-brand-line bg-brand-soft/40 p-6 sm:p-8" aria-label="Выбранный фильм">
+      <p class="text-sm font-semibold text-brand-ink"><%= yes_count == @quiz.participant_ids.size ? "Единогласный выбор" : "Создатель комнаты выбрал лидера по голосам" %> · <%= yes_count %> из <%= @quiz.participant_ids.size %> ответили «Да»</p>
+      <h2 class="mt-4 break-words text-2xl font-bold"><%= movie.fetch("title") %></h2>
+      <p class="mt-3 text-sm leading-7 text-ink-secondary"><%= movie["overview"].presence || "Посмотрите подробности на странице фильма." %></p>
+      <%= link_to "Открыть фильм", movie_path(movie.fetch("id")), class: class_names(ui_button_classes, "mt-6") %>
+    </section>
+  <% elsif @quiz.active? %>
+    <% movie = @quiz.current_candidate.fetch("movie") %>
+    <section class="rounded-3xl border border-line bg-surface p-5 sm:p-8" aria-label="Текущий фильм">
+      <p class="mb-5 text-sm font-semibold text-brand-ink">Раунд <%= @quiz.skipped_movie_ids.size + 1 %> из <%= @quiz.candidates.size %></p>
+      <div class="grid items-start gap-6 md:grid-cols-[200px_minmax(0,1fr)]">
+        <% if movie["poster_path"].present? %>
+          <%= image_tag "https://image.tmdb.org/t/p/w342#{movie['poster_path']}", alt: "Постер фильма «#{movie['title']}»", class: "mx-auto aspect-[2/3] w-full max-w-48 rounded-2xl bg-surface-raised object-cover" %>
+        <% else %>
+          <div class="mx-auto grid aspect-[2/3] w-full max-w-48 place-items-center rounded-2xl bg-brand-soft text-brand-ink" aria-label="Постер отсутствует"><%= ui_icon(:film, classes: "size-12") %></div>
+        <% end %>
+        <div class="min-w-0">
+          <h2 class="break-words text-2xl font-bold sm:text-3xl"><%= movie.fetch("title") %></h2>
+          <p class="mt-3 text-sm text-ink-muted"><%= movie["release_date"].to_s.first(4) %><% if movie["vote_average"].to_f.positive? %> · <%= number_with_precision(movie["vote_average"], precision: 1) %> / 10 на TMDB<% end %></p>
+          <p class="mt-5 text-sm leading-7 text-ink-secondary"><%= movie["overview"].presence || "Описание отсутствует. Можно открыть карточку фильма или ответить «Не знаю»." %></p>
+          <%= link_to "Подробнее о фильме →", movie_path(movie.fetch("id")), target: "_blank", rel: "noopener", class: "mt-4 inline-flex min-h-11 items-center text-sm text-brand-ink" %>
+        </div>
+      </div>
+      <div class="mt-7 border-t border-line pt-5">
+        <% if !@quiz.participant_ids.include?(Current.user.id) %>
+          <p class="text-sm text-ink-muted">Вы вступили в комнату после запуска квиза. Сможете голосовать в следующем.</p>
+        <% elsif @own_vote %>
+          <p role="status" class="rounded-2xl bg-brand-soft p-4 text-sm text-brand-ink">Ваш ответ: «<%= RoomQuizVote::CHOICES.fetch(@own_vote.choice) %>». Ждём остальных участников — следующий раунд появится автоматически.</p>
+        <% else %>
+          <p class="mb-4 font-semibold">Посмотрим этот фильм?</p>
+          <div class="grid grid-cols-3 gap-2 sm:gap-4" aria-label="Ваш голос">
+            <% RoomQuizVote::CHOICES.each do |choice, label| %>
+              <%= button_to label, vote_room_quiz_path(@room, @quiz), params: { tmdb_id: movie.fetch("id"), choice: choice }, class: class_names(ui_button_classes(choice == "yes" ? :primary : :secondary), "w-full cursor-pointer"), data: { turbo_submits_with: "Сохраняем…" } %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <div class="mt-5" aria-live="polite">
+        <p class="text-sm font-semibold">Ответили <%= @votes.size %> из <%= @quiz.participant_ids.size %></p>
+        <ul class="mt-3 flex flex-wrap gap-2" aria-label="Голоса участников">
+          <% @participants.each do |participant| %>
+            <li class="rounded-full bg-surface-raised px-3 py-2 text-xs text-ink-secondary"><%= participant.nickname %> · <%= @votes[participant.id] ? RoomQuizVote::CHOICES.fetch(@votes[participant.id].choice) : "думает" %></li>
+          <% end %>
+        </ul>
+      </div>
+    </section>
+  <% else %>
+    <section class="rounded-3xl border border-line bg-surface p-6 sm:p-8">
+      <h2 class="text-xl font-semibold"><%= @quiz.exhausted? ? "Фильмы из подборки закончились" : "Квиз завершён без выбранного фильма" %></h2>
+      <p class="mt-3 text-sm leading-6 text-ink-muted">Единогласного «Да» не было. Создатель комнаты может выбрать лидера по голосам или сформировать новую подборку. При новом подборе учтём отказы в этой комнате.</p>
+      <%= link_to "Вернуться к подборке", room_path(@room), class: class_names(ui_button_classes(:secondary), "mt-5") %>
+    </section>
+  <% end %>
+
+  <% unless @quiz.selected? || @quiz.finished? %>
+    <section class="mt-6 rounded-3xl border border-line bg-surface p-6 sm:p-8" aria-label="Лидер по голосам">
+      <% if @best_round %>
+        <h2 class="text-xl font-semibold">Лидер: <%= @best_round.fetch(:candidate).fetch("movie").fetch("title") %></h2>
+        <p class="mt-3 text-sm text-ink-muted"><%= @best_round.fetch(:yes_count) %> из <%= @quiz.participant_ids.size %> ответили «Да» в законченном раунде.</p>
+      <% else %>
+        <h2 class="text-xl font-semibold">Лидера пока нет</h2>
+        <p class="mt-3 text-sm text-ink-muted">Здесь появится фильм с наибольшим числом «Да» среди законченных раундов.</p>
+      <% end %>
+      <% if @room.owner_id == Current.user.id %>
+        <%= button_to @best_round ? "Завершить и выбрать лидера" : "Завершить без выбора", finish_room_quiz_path(@room, @quiz), class: class_names(ui_button_classes(:secondary), "mt-5 cursor-pointer") %>
+        <p class="mt-3 text-xs leading-5 text-ink-muted">Незаконченный раунд не участвует в выборе лидера. При равенстве голосов выбирается более ранний фильм.</p>
+      <% else %>
+        <p class="mt-4 text-xs text-ink-muted">Досрочно завершить квиз может создатель комнаты.</p>
+      <% end %>
+    </section>
+  <% end %>
+  <% if @quiz.skipped_movie_ids.any? %>
+    <details class="mt-6 rounded-2xl border border-line bg-surface p-5">
+      <summary class="cursor-pointer font-semibold">Законченные раунды · <%= @quiz.skipped_movie_ids.size %></summary>
+      <ul class="mt-4 space-y-3 text-sm text-ink-secondary">
+        <% @quiz.completed_rounds.each do |round| %>
+          <li><%= round.fetch(:candidate).fetch("movie").fetch("title") %> · <%= round.fetch(:yes_count) %> «Да»</li>
+        <% end %>
+      </ul>
+    </details>
+  <% end %>
+  <%= render "movies/tmdb_attribution" %>
+</main>

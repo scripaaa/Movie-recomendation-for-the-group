@@ -8,15 +8,31 @@
   </header>
   <section class="rounded-3xl border border-line bg-surface p-6 shadow-sm sm:p-8" aria-labelledby="selection-heading">
     <h2 id="selection-heading" class="mb-5 text-xl font-semibold tracking-tight">Пожелания на вечер</h2>
-    <%= render "shared/recommendation_form" %>
+    <%= render "shared/recommendation_form", destination: recommendations_path %>
   </section>
   <section class="mt-6 rounded-3xl border border-line bg-surface p-6 sm:p-8" aria-labelledby="recommendations-heading">
     <h2 id="recommendations-heading" class="text-xl font-semibold tracking-tight">Подходит вам</h2>
+    <% if @error_message %>
+      <p role="alert" class="mt-4 text-rose-200"><%= @error_message %></p>
+    <% elsif @recommendations.any? %>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <% @recommendations.each do |result| %>
+          <div>
+            <%= render "movies/movie_card", movie: result.movie %>
+            <p class="mt-2 text-sm text-ink-muted"><%= result.reason %></p>
+          </div>
+        <% end %>
+      </div>
+    <% elsif @requested %>
+      <p class="mt-4 text-ink-muted">Подходящих фильмов не найдено. Измените пожелания или разрешите показывать просмотренные фильмы.</p>
+    <% else %>
     <div class="flex min-h-44 flex-col items-center justify-center py-6 text-center">
       <span class="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink"><%= ui_icon(:sparkles, classes: "size-6") %></span>
       <h3 class="mt-4 font-semibold">Следующий любимый фильм — впереди</h3>
       <p class="mt-2 max-w-md text-sm leading-6 text-ink-muted">Здесь появится ваша подборка. А пока можно найти знакомые фильмы и оценить их.</p>
       <%= link_to "Перейти к фильмам", movies_path, class: class_names(ui_button_classes(:secondary), "mt-5") %>
     </div>
+    <% end %>
   </section>
+  <%= render "movies/tmdb_attribution" %>
 </main>

@@ -1,21 +1,22 @@
 <% destination = local_assigns[:destination] %>
+<% preferences = local_assigns.fetch(:preferences, params) %>
 <% form_data = destination.present? ? {} : { controller: "pending-action", action: "submit->pending-action#submit input->pending-action#clear", pending_action_message_value: "Подбор фильмов пока недоступен. Попробуйте позже.", turbo: false } %>
-<%= form_with url: destination.presence || "#", method: :get, class: "space-y-5", data: form_data do |form| %>
+<%= form_with url: destination.presence || "#", method: local_assigns.fetch(:submission_method, :get), class: "space-y-5", data: form_data do |form| %>
   <div class="grid gap-4 sm:grid-cols-2">
     <div>
       <%= form.label :genre, "Жанр", class: ui_label_classes %>
-      <%= form.select :genre, [ [ "Любой жанр", "" ], [ "Комедия", "comedy" ], [ "Драма", "drama" ], [ "Фантастика", "science_fiction" ], [ "Триллер", "thriller" ], [ "Приключения", "adventure" ], [ "Мультфильм", "animation" ] ], {}, class: ui_input_classes %>
+      <%= form.select :genre, [ [ "Любой жанр", "" ], [ "Комедия", "comedy" ], [ "Драма", "drama" ], [ "Фантастика", "science_fiction" ], [ "Триллер", "thriller" ], [ "Приключения", "adventure" ], [ "Мультфильм", "animation" ] ], { selected: preferences["genre"] }, class: ui_input_classes %>
     </div>
     <div>
       <%= form.label :duration, "Продолжительность", class: ui_label_classes %>
-      <%= form.select :duration, [ [ "Неважно", "" ], [ "До 90 минут", "90" ], [ "До 2 часов", "120" ], [ "До 3 часов", "180" ] ], {}, class: ui_input_classes %>
+      <%= form.select :duration, [ [ "Неважно", "" ], [ "До 90 минут", "90" ], [ "До 2 часов", "120" ], [ "До 3 часов", "180" ] ], { selected: preferences["duration"] }, class: ui_input_classes %>
     </div>
   </div>
   <label class="flex items-start gap-3 text-sm leading-6 text-ink-secondary">
-    <%= form.check_box :exclude_watched, { checked: true, class: "mt-1 size-4 shrink-0 accent-brand-600" }, "1", "0" %>
-    Не показывать просмотренные фильмы
+    <%= form.check_box :exclude_watched, { checked: preferences["exclude_watched"] != "0", class: "mt-1 size-4 shrink-0 accent-brand-600" }, "1", "0" %>
+    <%= local_assigns[:group] ? "Не показывать фильмы, оценённые хотя бы одним участником" : "Не показывать просмотренные фильмы" %>
   </label>
-  <%= form.button "Подобрать фильмы", type: :submit, disabled: destination.blank?, class: class_names(ui_button_classes, "w-full cursor-pointer sm:w-auto"), data: destination.present? ? {} : { pending_action_target: "submit" } %>
+  <%= form.button "Подобрать фильмы", type: :submit, disabled: destination.blank?, class: class_names(ui_button_classes, "w-full cursor-pointer sm:w-auto"), data: destination.present? ? { turbo_submits_with: "Подбираем фильмы…" } : { pending_action_target: "submit" } %>
   <% if destination.blank? %>
     <p hidden class="rounded-xl border border-amber-800/60 bg-amber-950/40 px-4 py-3 text-sm leading-6 text-amber-200" role="status" data-pending-action-target="status"></p>
   <% end %>

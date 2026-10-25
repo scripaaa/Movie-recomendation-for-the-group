@@ -9,21 +9,14 @@
       <button type="button" class="grid size-11 shrink-0 cursor-pointer place-items-center rounded-xl text-ink-muted hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-brand-300" aria-label="Закрыть приглашение" data-action="dialog#close"><%= ui_icon(:close) %></button>
     </div>
     <div class="space-y-6 p-6">
-      <%= form_with url: "#", method: :get, class: "space-y-4", data: { controller: "pending-action", action: "submit->pending-action#submit input->pending-action#clear", pending_action_message_value: "Отправка приглашений пока недоступна.", turbo: false } do |form| %>
-        <div>
-          <%= form.label :nickname, "Никнейм друга", class: ui_label_classes %>
-          <%= form.text_field :nickname, required: true, autocomplete: "off", placeholder: "Введите никнейм", class: ui_input_classes %>
-        </div>
-        <%= form.button "Отправить приглашение", type: :submit, disabled: true, class: class_names(ui_button_classes, "w-full cursor-pointer"), data: { pending_action_target: "submit" } %>
-        <p hidden class="rounded-xl border border-amber-800/60 bg-amber-950/40 px-4 py-3 text-sm text-amber-200" role="status" data-pending-action-target="status"></p>
-      <% end %>
-      <div class="border-t border-line pt-5">
+      <div data-controller="clipboard">
         <label for="invitation-link" class="<%= ui_label_classes %>">Ссылка приглашения</label>
         <div class="flex flex-col gap-3 sm:flex-row">
-          <input id="invitation-link" type="text" readonly placeholder="Ссылка пока недоступна" class="<%= ui_input_classes %> min-w-0 sm:flex-1" aria-describedby="invitation-link-help">
-          <button type="button" class="<%= ui_button_classes(:secondary) %> shrink-0" disabled>Копировать</button>
+          <input id="invitation-link" type="text" readonly value="<%= @invitation_url %>" class="<%= ui_input_classes %> min-w-0 sm:flex-1" aria-describedby="invitation-link-help" data-clipboard-target="source">
+          <button type="button" class="<%= ui_button_classes(:secondary) %> shrink-0 cursor-pointer" data-action="clipboard#copy">Копировать</button>
         </div>
-        <p id="invitation-link-help" class="mt-2 text-xs leading-5 text-ink-muted">Ссылка появится после создания комнаты.</p>
+        <p id="invitation-link-help" class="mt-2 text-xs leading-5 text-ink-muted">Отправьте ссылку другу. После входа или регистрации он сможет вступить в комнату.</p>
+        <p class="mt-3 text-sm text-brand-ink" role="status" data-clipboard-target="status"></p>
       </div>
     </div>
   </dialog>

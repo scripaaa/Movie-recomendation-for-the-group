@@ -17,15 +17,15 @@
   <section class="my-4 grid grid-cols-3 gap-3" aria-label="Моя активность">
     <article class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 sm:p-4">
       <span class="hidden size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink sm:grid"><%= ui_icon(:star) %></span>
-      <div class="min-w-0"><p class="text-xl font-semibold tabular-nums">0</p><p class="mt-1 text-xs leading-5 text-ink-muted">Оценено фильмов</p></div>
+      <div class="min-w-0"><p class="text-xl font-semibold tabular-nums"><%= @ratings_count %></p><p class="mt-1 text-xs leading-5 text-ink-muted">Оценено фильмов</p></div>
     </article>
     <article class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 sm:p-4">
       <span class="hidden size-10 shrink-0 place-items-center rounded-xl bg-amber-950/40 text-amber-300 sm:grid"><%= ui_icon(:chart) %></span>
-      <div class="min-w-0"><p class="text-xl font-semibold">—</p><p class="mt-1 text-xs leading-5 text-ink-muted">Средняя оценка</p></div>
+      <div class="min-w-0"><p class="text-xl font-semibold"><%= @average_rating ? number_with_precision(@average_rating, precision: 1) : "—" %></p><p class="mt-1 text-xs leading-5 text-ink-muted">Средняя оценка</p></div>
     </article>
     <article class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 sm:p-4">
       <span class="hidden size-10 shrink-0 place-items-center rounded-xl bg-emerald-950/40 text-emerald-300 sm:grid"><%= ui_icon(:users) %></span>
-      <div class="min-w-0"><p class="text-xl font-semibold tabular-nums">0</p><p class="mt-1 text-xs leading-5 text-ink-muted">Комнат</p></div>
+      <div class="min-w-0"><p class="text-xl font-semibold tabular-nums"><%= @rooms_count %></p><p class="mt-1 text-xs leading-5 text-ink-muted">Комнат</p></div>
     </article>
   </section>
   <div class="grid gap-4 lg:grid-cols-2">
@@ -34,6 +34,16 @@
         <h2 class="text-lg font-semibold tracking-tight">Мои оценки</h2>
         <%= link_to "Все оценки →", ratings_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-brand-ink hover:text-brand-ink-hover" %>
       </div>
+      <% if @recent_ratings.any? %>
+        <ul class="mb-4 mt-3 space-y-3">
+          <% @recent_ratings.each do |rating| %>
+            <li class="flex items-center justify-between gap-3 text-sm">
+              <%= link_to rating.movie.title, movie_path(rating.movie.tmdb_id), class: "text-brand-ink hover:text-brand-ink-hover" %>
+              <span class="shrink-0 font-semibold"><%= rating.score %> / 10</span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
       <div class="mb-4 mt-3 flex items-start gap-3">
         <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink"><%= ui_icon(:film) %></span>
         <div>
@@ -41,6 +51,7 @@
           <p class="mt-1 text-sm leading-6 text-ink-muted">Оцените знакомые фильмы — рекомендации станут точнее.</p>
         </div>
       </div>
+      <% end %>
       <div class="mt-auto flex flex-wrap items-center gap-3">
         <%= link_to "Оценить фильм", movies_path, class: ui_button_classes(:secondary) %>
         <%= link_to "Подобрать фильмы", recommendations_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-brand-ink hover:text-brand-ink-hover" %>
@@ -51,6 +62,13 @@
         <h2 class="text-lg font-semibold tracking-tight">Мои комнаты</h2>
         <%= link_to "Все комнаты →", rooms_path, class: "inline-flex min-h-11 items-center text-sm font-medium text-brand-ink hover:text-brand-ink-hover" %>
       </div>
+      <% if @recent_rooms.any? %>
+        <ul class="mb-4 mt-3 space-y-3" aria-label="Мои комнаты">
+          <% @recent_rooms.each do |room| %>
+            <li class="text-sm"><%= link_to room.name, room_path(room), class: "text-brand-ink hover:text-brand-ink-hover" %></li>
+          <% end %>
+        </ul>
+      <% else %>
       <div class="mb-4 mt-3 flex items-start gap-3">
         <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink"><%= ui_icon(:users) %></span>
         <div>
@@ -58,8 +76,9 @@
           <p class="mt-1 text-sm leading-6 text-ink-muted">Пригласите друзей и найдите фильм для всей компании.</p>
         </div>
       </div>
+      <% end %>
       <div class="mt-auto">
-        <%= link_to "Перейти в комнату", current_room_path, class: ui_button_classes(:secondary) %>
+        <%= link_to "Мои комнаты", rooms_path, class: ui_button_classes(:secondary) %>
       </div>
     </section>
   </div>

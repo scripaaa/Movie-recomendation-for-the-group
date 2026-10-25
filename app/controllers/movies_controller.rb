@@ -21,6 +21,7 @@ class MoviesController < ApplicationController
 
   def show
     @movie = Tmdb::MovieSearch.new.details(params[:tmdb_id])
+    @rating = Current.user.ratings.joins(:movie).find_by(movies: { tmdb_id: params[:tmdb_id] })
   rescue Tmdb::MovieSearch::ConfigurationError
     @error_message = "Для просмотра фильма нужно настроить TMDB API Read Access Token. Инструкция есть в README."
   rescue Tmdb::MovieSearch::AuthenticationError

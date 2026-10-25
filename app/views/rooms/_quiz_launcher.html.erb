@@ -1,0 +1,21 @@
+<section class="rounded-3xl border border-brand-line bg-brand-soft/40 p-6 sm:p-8" aria-labelledby="room-quiz-heading">
+  <p class="mb-2 text-xs font-semibold tracking-widest text-brand-ink">РЕШАЕМ ВМЕСТЕ</p>
+  <h2 id="room-quiz-heading" class="text-2xl font-semibold tracking-tight">Квиз для компании</h2>
+  <p class="mt-3 text-sm leading-6 text-ink-muted">Смотрите фильмы из подборки по одному и отвечайте «Нет», «Не знаю» или «Да». Единогласное «Да» выбирает фильм. Создатель комнаты может завершить квиз и выбрать лидера по голосам.</p>
+  <div class="mt-5 flex flex-wrap items-center gap-3">
+    <% if @latest_quiz&.active? %>
+      <%= link_to "Перейти в квиз", room_quiz_path(@room, @latest_quiz), class: ui_button_classes %>
+    <% else %>
+      <% if @room.owner_id == Current.user.id && @room.selection_results.any? %>
+        <%= button_to @latest_quiz ? "Начать новый квиз" : "Начать квиз", room_quizzes_path(@room), class: class_names(ui_button_classes, "cursor-pointer"), data: { turbo_submits_with: "Запускаем…" } %>
+      <% elsif @room.selection_results.empty? %>
+        <p class="text-sm text-ink-secondary">Сначала подберите фильмы для комнаты.</p>
+      <% else %>
+        <p class="text-sm text-ink-secondary">Квиз запускает создатель комнаты.</p>
+      <% end %>
+      <% if @latest_quiz %>
+        <%= link_to @latest_quiz.selected? ? "Выбранный фильм →" : "Последний квиз →", room_quiz_path(@room, @latest_quiz), class: ui_button_classes(:secondary) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

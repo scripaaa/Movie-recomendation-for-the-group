@@ -9,10 +9,23 @@
     </div>
     <%= link_to "Подобрать фильмы", recommendations_path, class: ui_button_classes(:secondary) %>
   </header>
+  <% if @ratings.any? %>
+    <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Ваши оценки фильмов">
+      <% @ratings.each do |rating| %>
+        <article class="rounded-2xl border border-line bg-surface p-5">
+          <h2 class="text-lg font-semibold"><%= link_to rating.movie.title, movie_path(rating.movie.tmdb_id), class: "text-brand-ink hover:text-brand-ink-hover" %></h2>
+          <% if rating.movie.release_date %><p class="mt-2 text-sm text-ink-muted"><%= rating.movie.release_date.year %></p><% end %>
+          <p class="mt-4 font-semibold">Ваша оценка: <%= rating.score %> / 10</p>
+          <%= link_to "Изменить оценку", movie_path(rating.movie.tmdb_id), class: "mt-3 inline-flex min-h-11 items-center text-sm text-brand-ink" %>
+        </article>
+      <% end %>
+    </section>
+  <% else %>
   <section class="flex min-h-64 flex-col items-center justify-center rounded-3xl border border-dashed border-line-strong bg-surface px-6 py-8 text-center">
     <span class="grid size-12 place-items-center rounded-2xl bg-amber-950/40 text-amber-300"><%= ui_icon(:star, classes: "size-6") %></span>
     <h2 class="mt-4 text-xl font-semibold tracking-tight">Какие фильмы вам нравятся?</h2>
     <p class="mt-3 max-w-md text-sm leading-6 text-ink-muted">Начните со знакомого фильма. Ваши оценки помогут находить новые истории по вашему вкусу.</p>
     <%= link_to "Найти и оценить фильм", movies_path, class: class_names(ui_button_classes, "mt-6") %>
   </section>
+  <% end %>
 </main>

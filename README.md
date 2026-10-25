@@ -28,16 +28,36 @@ Tailwind before tests and production asset precompilation. Generated CSS in
 `app/assets/builds` is ignored by Git. Tailwind is compiled locally; no browser CDN
 or Node.js dependency is required.
 
-## UI Kit screens
+## User flows
 
-Authenticated UI routes include `/ratings`, `/recommendations`, `/rooms`,
-`/rooms/new`, `/room` and `/rooms/:id`. The room's selection button opens
-`/room/selection` or `/rooms/:id/selection`, with a return link to the same room.
-The selection screen is a shell for the future shared survey. The room, invitation, recommendation and
-personal rating interfaces are ready for backend integration. They do not create
-records, send invitations, save ratings or calculate recommendations yet. Form
-submission for actions without a backend stays on the page and reports that the action is not available. No
-sample rooms, members, invitation links or recommendation results are generated.
+Signed-in users can search TMDB, open movie details, and save or update scores
+from 1 to 10. Saved ratings appear in `/ratings` and the profile. Personal
+recommendations at `/recommendations` use genre preferences, genre/runtime filters,
+and an option to exclude rated movies.
+
+Users can create rooms at `/rooms/new`, copy a signed invitation link, and share
+it with a friend. The friend signs in or registers, returns to the invitation,
+and explicitly joins. `/rooms` and the profile show the user's real rooms.
+Only room members can open a room or view and generate its shared selection.
+
+Submitting a room's selection form uses every member's ratings with equal weight
+per person. The filters and up to 12 results are saved in the room, so all members
+can open the same selection at `/rooms/:id/selection`. Reading a saved selection
+does not call TMDB. Generate it again after ratings or membership change.
+`/room` and `/room/selection` redirect to the user's newest room, or to `/rooms`
+when they have no rooms. No sample records or fake results are generated.
+
+The room owner can start a quiz from the saved selection. Everyone present at
+the start sees the same movie and votes No, Not sure, or Yes once per round.
+Unanimous Yes selects the film. The owner can finish early and select the film
+with the most Yes votes across completed rounds; ties favor the earlier film.
+No votes lower genre priorities only in that room and reorder subsequent cards
+and future room recommendations. Personal ratings are unchanged. Quiz pages
+automatically refresh after votes. See the [quiz rules](docs/quiz.ru.md).
+
+Apply migrations with `ruby bin/rails db:migrate`, then run `ruby bin/dev`.
+See the [two-account walkthrough](docs/happy-path.ru.md) and
+[recommendation algorithm](docs/recommendations.ru.md).
 
 ## Movie search setup
 

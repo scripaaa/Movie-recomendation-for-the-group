@@ -28,6 +28,17 @@ module Tmdb
       raise NotFoundError, "Invalid TMDB movie ID"
     end
 
+    def discover(genre_ids: [], duration: nil, page: 1)
+      filters = { language: "ru-RU", include_adult: false, include_video: false,
+                  sort_by: "popularity.desc", page: page, "vote_count.gte" => 50 }
+      filters[:with_genres] = genre_ids.join("|") if genre_ids.any?
+      if duration
+        filters["with_runtime.gte"] = 1
+        filters["with_runtime.lte"] = duration
+      end
+      get_results("/discover/movie", filters)
+    end
+
     private
 
     def get_results(path, params)
