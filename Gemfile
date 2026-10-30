@@ -5,7 +5,7 @@ gem "rails", "~> 8.1.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Compile Tailwind CSS for the server-rendered interface.
-gem "tailwindcss-rails", "~> 4.0"
+gem "tailwindcss-rails", "~> 4.7"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
